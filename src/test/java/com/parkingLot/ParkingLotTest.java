@@ -71,4 +71,16 @@ public class ParkingLotTest {
         boolean isEmpty = parkingLotSystem.isParkingLotFull();
         Assertions.assertFalse(isEmpty);
     }
+
+    @Test
+    public void parkingLotWhenFull_ShouldRedirectToAirportStaff() throws ParkingLotException {
+        try {
+            parkingLotSystem.park(vehicle);
+            if (parkingLotSystem.isParkingLotFull()) {
+                throw new ParkingLotIndicator("Parking Lot is Full");
+            }
+        } catch (ParkingLotIndicator e){
+            Assertions.assertEquals("Parking Lot is Full",e.getMessage());
+        }
+    }
 }
