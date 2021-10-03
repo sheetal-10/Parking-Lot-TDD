@@ -3,13 +3,22 @@ package com.parkingLot;
 public class ParkingLotSystem {
 
     private Object vehicle;
+    private final int actualCapacity;
+    private int currentCapacity;
+    private ParkingLotOwner owner;
+
+    public ParkingLotSystem(int capacity) {
+        this.currentCapacity = 0;
+        this.actualCapacity = capacity;
+    }
 
     public void park(Object vehicle) throws ParkingLotException {
-        if (this.vehicle == null) {
-            this.vehicle = vehicle;
-        } else if (this.vehicle.equals(vehicle)) {
+        if (this.currentCapacity == this.actualCapacity) {
+            owner.capacityIsFull();
             throw new ParkingLotException("Vehicle is already Parked");
         }
+        this.currentCapacity++;
+        this.vehicle = vehicle;
     }
 
     public boolean isVehicleParked(Object vehicle) {
@@ -29,5 +38,9 @@ public class ParkingLotSystem {
 
     public boolean isParkingLotFull() {
         return this.vehicle != null;
+    }
+
+    public void registerOwner(ParkingLotOwner owner) {
+        this.owner = owner;
     }
 }

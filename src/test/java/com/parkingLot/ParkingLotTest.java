@@ -11,7 +11,7 @@ public class ParkingLotTest {
     @BeforeEach
     public void setUp() throws Exception {
         vehicle = new Object();
-        parkingLotSystem = new ParkingLotSystem();
+        parkingLotSystem = new ParkingLotSystem(1);
     }
 
     @Test
@@ -38,9 +38,8 @@ public class ParkingLotTest {
     public void givenAVehicle_WhenAlreadyParked_ShouldReturnFalse() {
         try {
             parkingLotSystem.park(vehicle);
-            parkingLotSystem.park(new Object());
         } catch (ParkingLotException e) {
-            Assertions.assertEquals("Parking Lot is full", e.getMessage());
+            Assertions.assertEquals("Vehicle is already Parked", e.getMessage());
             e.printStackTrace();
         }
     }
@@ -79,8 +78,34 @@ public class ParkingLotTest {
             if (parkingLotSystem.isParkingLotFull()) {
                 throw new ParkingLotIndicator("Parking Lot is Full");
             }
-        } catch (ParkingLotIndicator e){
-            Assertions.assertEquals("Parking Lot is Full",e.getMessage());
+        } catch (ParkingLotIndicator e) {
+            Assertions.assertEquals("Parking Lot is Full", e.getMessage());
+        }
+    }
+
+    @Test
+    public void parkingLotWhenFoundNotFull_shouldIndicateToOwner() throws ParkingLotException {
+        try {
+            parkingLotSystem.park(vehicle);
+            if (parkingLotSystem.isParkingLotFull()) {
+                throw new ParkingLotIndicator("Parking Lot doesn't has space");
+            }
+        } catch (ParkingLotIndicator e) {
+            Assertions.assertEquals("Parking Lot doesn't has space", e.getMessage());
+        }
+    }
+
+    @Test
+    public void givenWhenParkingLotIsFull_ShouldInformTheOwner(){
+        ParkingLotOwner owner = new ParkingLotOwner();
+        parkingLotSystem.registerOwner(owner);
+        try {
+            parkingLotSystem.park(vehicle);
+            parkingLotSystem.park(new Object());
+        } catch (ParkingLotException e) {
+            e.printStackTrace();
+            boolean capacityFull = owner.isCapacityFull();
+            Assertions.assertTrue(capacityFull);
         }
     }
 }
