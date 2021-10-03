@@ -4,8 +4,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
-
 public class ParkingLotTest {
     ParkingLotSystem parkingLotSystem = null;
     Object vehicle = null;
@@ -98,9 +96,9 @@ public class ParkingLotTest {
     }
 
     @Test
-    public void givenWhenParkingLotIsFull_ShouldInformTheOwner(){
+    public void givenWhenParkingLotIsFull_ShouldInformTheOwner() {
         ParkingLotOwner owner = new ParkingLotOwner();
-        parkingLotSystem.registerOwner(owner);
+        parkingLotSystem.registerParkingLotObserver(owner);
         try {
             parkingLotSystem.park(vehicle);
             parkingLotSystem.park(new Object());
@@ -110,6 +108,7 @@ public class ParkingLotTest {
             Assertions.assertTrue(capacityFull);
         }
     }
+
     @Test
     public void givenCapacityIs2_ShouldBeAbleToPark2Vehicles() {
         Object vehicle2 = new Object();
@@ -122,6 +121,19 @@ public class ParkingLotTest {
             Assertions.assertTrue(isParked1 && isParked2);
         } catch (ParkingLotException e) {
             e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void givenWhenParkingLotIsFull_ShouldInformTheSecurity() {
+        AirportSecurity airportSecurity = new AirportSecurity();
+        parkingLotSystem.registerParkingLotObserver(airportSecurity);
+        try {
+            parkingLotSystem.park(vehicle);
+            parkingLotSystem.park(new Object());
+        } catch (ParkingLotException e) {
+            boolean capacityFull = airportSecurity.isCapacityFull();
+            Assertions.assertTrue(capacityFull);
         }
     }
 }
