@@ -1,35 +1,47 @@
 package com.parkingLot;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ParkingLotSystem {
 
+    private final List vehicles;
     private Object vehicle;
-    private final int actualCapacity;
+    private int actualCapacity;
     private int currentCapacity;
     private ParkingLotOwner owner;
 
     public ParkingLotSystem(int capacity) {
-        this.currentCapacity = 0;
+        this.vehicles = new ArrayList();
+        this.actualCapacity = capacity;
+    }
+
+    public void setCapacity(int capacity) {
         this.actualCapacity = capacity;
     }
 
     public void park(Object vehicle) throws ParkingLotException {
-        if (this.currentCapacity == this.actualCapacity) {
+        if (this.vehicles.size() == this.actualCapacity) {
             owner.capacityIsFull();
-            throw new ParkingLotException("Vehicle is already Parked");
+            throw new ParkingLotException("Parking Lot is Full");
         }
-        this.currentCapacity++;
-        this.vehicle = vehicle;
+        if (isVehicleParked(vehicle)) {
+            throw new ParkingLotException("Vehicle Already Parked");
+        }
+        this.vehicles.add(vehicle);
     }
 
     public boolean isVehicleParked(Object vehicle) {
-        return this.vehicle.equals(vehicle);
+        return this.vehicles.contains(vehicle);
     }
 
-    public void unPark(Object vehicle) throws ParkingLotException {
-        if (this.vehicle == null) {
-            throw new ParkingLotException("There is no Vehicle to Unpark");
-        } else if (this.vehicle.equals(vehicle))
-            this.vehicle = null;
+    public boolean unPark(Object vehicle) throws ParkingLotException {
+        if (vehicle == null) return false;
+        if (this.vehicles.contains(vehicle)) {
+            this.vehicles.remove(vehicle);
+            return true;
+        }
+        return false;
     }
 
     public boolean isUnParked() {
@@ -37,7 +49,7 @@ public class ParkingLotSystem {
     }
 
     public boolean isParkingLotFull() {
-        return this.vehicle != null;
+        return this.vehicles.size() == this.actualCapacity;
     }
 
     public void registerOwner(ParkingLotOwner owner) {

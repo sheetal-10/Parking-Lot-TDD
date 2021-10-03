@@ -4,6 +4,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 public class ParkingLotTest {
     ParkingLotSystem parkingLotSystem = null;
     Object vehicle = null;
@@ -106,6 +108,20 @@ public class ParkingLotTest {
             e.printStackTrace();
             boolean capacityFull = owner.isCapacityFull();
             Assertions.assertTrue(capacityFull);
+        }
+    }
+    @Test
+    public void givenCapacityIs2_ShouldBeAbleToPark2Vehicles() {
+        Object vehicle2 = new Object();
+        parkingLotSystem.setCapacity(2);
+        try {
+            parkingLotSystem.park(vehicle);
+            parkingLotSystem.park(vehicle2);
+            boolean isParked1 = parkingLotSystem.isVehicleParked(vehicle2);
+            boolean isParked2 = parkingLotSystem.isVehicleParked(vehicle2);
+            Assertions.assertTrue(isParked1 && isParked2);
+        } catch (ParkingLotException e) {
+            e.printStackTrace();
         }
     }
 }
